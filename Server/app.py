@@ -230,7 +230,24 @@ def add_student():
     db.session.commit()
     return jsonify({'message': 'Student added successfully!'})
 
-
+@app.route('/students/<int:user_id>', methods=['GET'])
+def get_student_by_user_id(user_id):
+    student = Student.query.filter_by(user_id=user_id).first()
+    if student:
+        return jsonify({
+            'student_id': student.student_id,
+            'name': student.name,
+            'usn': student.usn,
+            'department_id': student.department_id,
+            'cgpa': str(student.cgpa),
+            'personal_email': student.personal_email,
+            'phone_no': student.phone_no,
+            'linkedin_profile': student.linkedin_profile,
+            'github_profile': student.github_profile,
+            'image': student.image.decode('utf-8') if student.image else None  # Ensure binary data is encoded
+        })
+    else:
+        return jsonify({'error': 'Student not found'}), 404
 
 
 if __name__ == '__main__':

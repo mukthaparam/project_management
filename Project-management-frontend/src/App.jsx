@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useParams } from "react-router-dom";
 import LoginSignUp from "./Login";
 import HomePage from "./HomePage";
-import StudentDetails from "./StudentDetails";
+import ProfilePage from "./profile"; // Renamed to match the import
 
 function App() {
   const [userId, setUserId] = useState(null); // Tracks the logged-in user's ID
@@ -18,16 +18,6 @@ function App() {
               <LoginSignUp onLoginSuccess={(id) => setUserId(id)} />
             }
           />
-          {/* Student Details Route */}
-          <Route
-            path="/studentdetails"
-            element={
-              <StudentDetails
-                userId={userId}
-                onComplete={() => setUserId(null)}
-              />
-            }
-          />
           {/* Home Route */}
           <Route
             path="/home"
@@ -39,10 +29,21 @@ function App() {
               )
             }
           />
+          {/* Profile Route */}
+          <Route
+            path="/profile/:userId"
+            element={<ProfileWrapper />}
+          />
         </Routes>
       </div>
     </Router>
   );
+}
+
+// Wrapper to extract `userId` from URL and pass it to ProfilePage
+function ProfileWrapper() {
+  const { userId } = useParams();
+  return <ProfilePage userId={parseInt(userId, 10)} />;
 }
 
 export default App;
